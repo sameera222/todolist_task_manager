@@ -1,15 +1,17 @@
 "use client";
-import dynamic from "next/dynamic";
-import Head from "next/head";
 import React from "react";
-import Cart from "./components/ToDoList";
+import dynamic from 'next/dynamic'
+
+import ToDoList from "./components/ToDoList";
 import { Provider, rootStore } from "./models/Root";
+
+const NoSSR = dynamic(() => import('./components/ToDoList'), { ssr: false })
 
 export default function Home() {
   return (
     <Provider value={rootStore}>
       <div className="container mx-auto">
-        <Cart />
+        <NoSSR/>
       </div>
     </Provider>
   );

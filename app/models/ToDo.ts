@@ -8,13 +8,14 @@ import {
 } from "mobx-state-tree";
 
 export const Tag = types.model({
-  name: types.string
+  name: types.string,
+  description: types.string,
 });
 
 export const CartItem = types
   .model({
     name: types.string,
-    price: types.number,
+    description: types.string,
     status: types.optional(
       types.enumeration(["complete", "inProgress", "todo"]),
       "todo"
@@ -25,8 +26,8 @@ export const CartItem = types
     changeName(newName: string) {
       self.name = newName;
     },
-    changePrice(newPrice: number) {
-      self.price = newPrice;
+    changeDescription(newPrice: string) {
+      self.description= newPrice;
     },
     changeStatus(newStatus: "complete" | "inProgress" | "todo") {
       self.status = newStatus;
@@ -54,9 +55,7 @@ export const Cart = types
     get totalItems() {
       return self.items.length;
     },
-    get totalPrice() {
-      return self.items.reduce((sum, entry) => sum + entry.price, 0);
-    },
+   
     get completeItems() {
       return self.items.filter(item => item.status === "complete");
     },
@@ -67,3 +66,4 @@ export const Cart = types
       return self.items.filter(item => item.status === "todo");
     }
   }));
+  

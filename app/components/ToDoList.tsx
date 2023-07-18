@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
 import { observer } from "mobx-react-lite";
 import React, { ChangeEvent, useState } from "react";
 import { useMst } from "../models/Root";
 import Button from "./Button";
 
-const Cart = observer(() => {
+const ToDoList = observer(() => {
   const { cart } = useMst();
 
   const [name, setName] = useState("");
-  const [description, setDescription] = useState('')
-  const [price, setPrice] = useState(20);
+  const [description, setDescription] = useState("");
   const [status, setStatus] = useState("todo");
 
   const isDisabled = () => {
-    return name === "" || price === 0;
+    return name === "" || description === "";
   };
 
   const handleEditItem = (item: any, newName: string) => {
@@ -35,74 +34,60 @@ const Cart = observer(() => {
   };
 
   return (
-    <div className="w-full mx-auto mt-16">
-      <p className="text-2xl font-bold text-center">TODO List</p>
-      <label className="block">
-        <span className="text-gray-200">Name</span>
-        <input
-          type="text"
-          className="block w-full mt-1 bg-gray-900 focus:ring-orange-500 focus:border-orange-500"
-          value={name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            if (e && e.target) {
-              setName(e.target.value);
-            }
-          }}
-        />
-      </label>
-      <label className="block mt-2">
-        <span className="text-gray-200">Decription</span>
-        {/* <input
-          type="number"
-          className="block w-full mt-1 bg-gray-900 focus:ring-orange-500 focus:border-orange-500"
-          min="0.0"
-          step="any"
-          value={price}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            if (e && e.target) {
-              setPrice(Number(e.target.value));
-            }
-          }}
-        /> */}
-         <input
-          type="text"
-          className="block w-full mt-1 bg-gray-900 focus:ring-orange-500 focus:border-orange-500"
-          value={description}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            if (e && e.target) {
-              setDescription(e.target.value);
-            }
-          }}
-        />
-      </label>
-      <div className="flex items-center mt-4">
-        <div className="flex flex-col flex-grow space-y-2">
-          <span
-            style={{ fontVariant: "tabular-nums" }}
-            className="text-lg font-bold leading-tight"
-          >
-            {/* ToDo Items: {cart.totalItems} */}
-          </span>
-          <span
-            style={{ fontVariant: "tabular-nums" }}
-            className="flex-grow text-lg font-bold leading-tight"
-          >
-            {/* Total: {cart.totalPrice} */}
-          </span>
+    <div className="w-full mx-auto mt-16 bg-[#deeaee]">
+        <p className="text-2xl font-bold text-center text-[#7e4a35] p-2">
+          TODO LIST
+        </p>
+
+      <div>
+        <label className="flex-grow">
+          <span className="text-[#7e4a35]">Name</span>
+          <input
+            type="text"
+            name="name"
+            id='name'
+            className="w-96 ml-2 mt-1 bg-gray-900 focus:ring-orange-500 focus:border-orange-500"
+            value={name}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              if (e && e.target) {
+                setName(e.target.value);
+              }
+            }}
+          />
+        </label>
+        <label className="mt-2">
+          <span className="text-[#7e4a35] ">
+            Description
+            </span>
+
+          <input
+            type="text"
+            name="description"
+            id='description'
+            className="w-96 ml-2 mt-1 bg-gray-900 focus:ring-orange-500 focus:border-orange-500"
+            value={description}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              if (e && e.target) {
+                setDescription(e.target.value);
+              }
+            }}
+          />
+        </label>
+        <div>
+          <Button
+            disabled={isDisabled()}
+            label="Add"
+            onClick={() => {
+              cart.addCartItem({
+                name,
+                description,
+                status,
+              });
+              setName("");
+              setDescription("");
+            }}
+          />
         </div>
-        <Button
-          disabled={isDisabled()}
-          label="Add"
-          onClick={() => {
-            cart.addCartItem({
-              name,
-              price,
-              status,
-            });
-            setName("");
-            setPrice(20);
-          }}
-        />
       </div>
       <div className="flex mt-4 space-x-4">
         <input
@@ -110,21 +95,21 @@ const Cart = observer(() => {
           checked={status === "complete"}
           onChange={() => setStatus("complete")}
         />
-        <label className="text-gray-200">Completed</label>
+        <label className="text-[#7e4a35] ">Completed</label>
         <input
           type="radio"
           value="inProgress"
           checked={status === "inProgress"}
           onChange={() => setStatus("inProgress")}
         />
-        <label className="text-gray-200">In Progress</label>
+        <label className="text-[#7e4a35] ">In Progress</label>
         <input
           type="radio"
           value="todo"
           checked={status === "todo"}
           onChange={() => setStatus("todo")}
         />
-        <label className="text-gray-200">To Do</label>
+        <label className="text-[#7e4a35] ">To Do</label>
       </div>
       <div className="h-64 w-full px-3 py-3 my-12 space-y-3 overflow-y-scroll border border-gray-500">
         {handleFilterItems().map((item: any, index: number) => (
@@ -135,6 +120,8 @@ const Cart = observer(() => {
             <div className="flex-grow">
               <input
                 type="text"
+                name="name"
+                id='name'
                 value={item.name}
                 className="bg-transparent focus:outline-none  focus:border-orange-500"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -142,12 +129,13 @@ const Cart = observer(() => {
                 }
               />
             </div>
-            {/* <div>
-            {item.price}</div> */}
+
             <div className="flex-grow">
               <input
                 type="text"
                 value={item.description}
+                name="description"
+            id='description'
                 className="bg-transparent focus:outline-none  focus:border-orange-500"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleEditItem(item, e.target.value)
@@ -169,4 +157,4 @@ const Cart = observer(() => {
   );
 });
 
-export default Cart;
+export default ToDoList;
