@@ -2,58 +2,60 @@
 
 import { observer } from "mobx-react-lite";
 import React, { ChangeEvent, useState } from "react";
-import { useMst } from "../models/Root";
+import { useMst } from "../store/ToDoStore";
 import { BsPencil } from "react-icons/bs";
 import Button from "./Button";
 import { MdDelete } from "react-icons/md";
 
 const ToDoList = observer(() => {
-  const { cart } = useMst();
+  const { toDoList } = useMst();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("todo");
 
+  const [editMode, setEditMode] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [editedName, setEditedName] = useState("");
+  const [editedDescription, setEditedDescription] = useState("");
+
+ 
+
   const isDisabled = () => {
     return name === "" || description === "";
   };
 
-  const handleEditItem = (item: any, newName: string) => {
-    item.changeName(newName);
-    // setSelectedItem(item);
-    // setName(item.name);
-    //  setDescription(item.description);
-  };
-
+ 
   const handleFilterItems = () => {
     switch (status) {
       case "complete":
-        return cart.completeItems;
+        return toDoList.completeItems;
       case "inProgress":
-        return cart.inProgressItems;
+        return toDoList.inProgressItems;
       case "todo":
-        return cart.todoItems;
+        return toDoList.todoItems;
       default:
-        return cart.items;
+        return toDoList.items;
     }
   };
 
   return (
-    <div className="w-9/12 p-4 mx-auto mt-16 bg-[#ffdde1] rounded">
-      <p className="text-2xl font-bold text-center text-[#7e4a35] p-2">
-        TODO LIST
-      </p>
+    <div className="w-2/4 p-4 mx-auto mt-16  rounded-md">
+      <p className="text-4xl font-bold text-center text-black p-2">TODO LIST</p>
 
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row justify-center p-4 mt-4">
         <div className="mr-2">
           <label>
-            <span className="text-[#7e4a35] text-xl font-bold">Title</span>
+            <span className="text-[#7e4a35] text-xl font-bold flex justify-start ml-4">
+              Title
+            </span>
             <input
               type="text"
               name="name"
               id="name"
+              autoComplete="off"
               placeholder="What's the task title?"
-              className="w-96 ml-2 pl-4 rounded-full h-20 mt-1 bg-white p-1 text-black focus:ring-orange-500 focus:border-orange-500"
+              className="text-xl text-orange-800 placeholder-orange-400 py-2 px-5 bg-orange-100 rounded-l-full outline-orange-300"
               value={name}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e && e.target) {
@@ -72,8 +74,9 @@ const ToDoList = observer(() => {
               type="text"
               name="description"
               id="description"
+              autoComplete="off"
               placeholder="what's the task description?"
-              className="w-96 h-20 ml-2 mt-1 pl-4 rounded-full bg-white focus:ring-orange-500 text-black focus:border-orange-500 p-1"
+              className="text-xl text-orange-800 placeholder-orange-400 py-2 px-5 bg-orange-100 rounded-l-full outline-orange-300"
               value={description}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e && e.target) {
@@ -83,12 +86,14 @@ const ToDoList = observer(() => {
             />
           </label>
         </div>
-        <div className="p-2">
+          {/* Step : Render the correct button based on editMode */}
+
+        <div className="p-2 mt-5">
           <Button
             disabled={isDisabled()}
             label="Add"
             onClick={() => {
-              cart.addCartItem({
+              toDoList.addListItem({
                 name,
                 description,
                 status,
@@ -122,7 +127,8 @@ const ToDoList = observer(() => {
         />
         <label className="text-[#7e4a35] ">To Do</label>
       </div>
-      <div className="h-72 w-full px-3 py-3 my-12 space-y-3 overflow-y-scroll">
+      
+      <div className="h-96 w-full px-3 py-3 my-12 space-y-3 rounded-xl shadow-lg bg-white">
         {handleFilterItems().map((item: any, index: number) => (
           <div
             key={`${item.name}`}
@@ -130,29 +136,59 @@ const ToDoList = observer(() => {
           >
             <div className="flex-grow">
               <div className="flex">
-                <div className="text-[#7e4a35] text-4xl">{item.name}</div>
+                {/* Step 5: Conditionally render input or static text */}
+                {editMode && selectedItem === item ? (
+                  <input
+                    type="text"
+                    className="text-orange-500 text-3xl bg-orange-100 w-96"
+                    value={editedName}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setEditedName(e.target.value)
+                    }
+                  />
+                ) : (
+                  <div className="text-orange-500 text-4xl">{item.name}</div>
+                )}
               </div>
               <div className="flex">
-                <div className="text-gray-400 text-xl">{item.description}</div>
+                {/* Step : Conditionally render input or static text */}
+                {editMode && selectedItem === item ? (
+                  <input
+                    type="text"
+                    className="text-gray-400 text-xl  bg-orange-100 w-96"
+                    value={editedDescription}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setEditedDescription(e.target.value)
+                    }
+                  />
+                ) : (
+                  <div className="text-gray-400 text-xl">
+                    {item.description}
+                  </div>
+                )}
               </div>
             </div>
             <span
               className="cursor-pointer select-none"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleEditItem(item, e.target.value)
-              }
+              // Step 2: Enable edit mode when the edit icon is clicked
+              onClick={() => {
+                setEditMode(true);
+                setSelectedItem(item);
+                setEditedName(item.name);
+                setEditedDescription(item.description);
+              }}
               role="img"
               aria-label="edit"
             >
-              <BsPencil size={30} />
+              <BsPencil size={25} className="text-orange-500" />
             </span>
             <span
-              className="cursor-pointer select-none"
+              className="cursor-pointer select-none ml-2"
               onClick={item.remove}
               role="img"
               aria-label="delete"
             >
-              <MdDelete size={30} />
+              <MdDelete size={25} className="text-orange-500" />
             </span>
           </div>
         ))}

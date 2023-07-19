@@ -1,80 +1,58 @@
-// import { createContext, useContext } from 'react';
-// import { types } from 'mobx-state-tree';
 
-// // Todo model
-// const Todo = types
-//   .model('Todo', {
-//     id: types.identifier,
-//     title: types.string,
-//     completed: false,
-//   })
-//   .actions(self => ({
-//     toggle() {
-//       self.completed = !self.completed;
-//     },
-//     setTitle(newTitle: string) {
-//       self.title = newTitle;
-//     },
-//   }));
+// Import required modules from 'mobx-state-tree', 'react', and the custom 'ToDo' model
+'use client'
+import { Instance, onSnapshot, types } from "mobx-state-tree";
+import { createContext, useContext } from "react";
+import { ToDo } from "../models/ToDo";
 
-// // TodoStore
-// const TodoStore = types
-//   .model('TodoStore', {
-//     todos: types.array(Todo),
-//   })
-//   .actions(self => ({
-//     addTodo: (todo: typeof Todo.Type) => {
-//       self.todos.push(todo);
-//     },
-//     removeTodo: (todo: typeof Todo.Type) => {
-//       self.todos.remove(todo);
-//     },
-//   }));
+// Define the 'RootModel' containing a single property 'toDoList' of type 'ToDo'
+const RootModel = types.model({
+  toDoList: ToDo,
+});
 
-// // RootStore
-// const RootStore = types.model('RootStore', {
-//   todoStore: TodoStore,
-// });
+// Create the initial state of the application using 'RootModel' with an empty 'toDoList'
+let initialState = RootModel.create({
+  toDoList: { items: [] },
+});
 
-// // Initial state
-// const initialState = {
-//   todoStore: {
-//     todos: [],
-//   },
-// };
+// Check if the code is running in the browser environment
+if (process.browser) {
+  // Attempt to retrieve the data from local storage
+  const data = localStorage.getItem("rootState");
+  if (data) {
+    // If data exists, parse it into a JSON object
+    const json = JSON.parse(data);
+    // Check if the parsed JSON object matches the structure defined in 'RootModel'
+    if (RootModel.is(json)) {
+      // If it matches, create a new MST instance using the parsed data as the initial state
+      initialState = RootModel.create(json);
+    }
+  }
+}
 
-// // Store context
-// const StoreContext = createContext(initialState);
+// Create the 'rootStore' using the initial state
+export const rootStore = initialState;
 
-// // Store provider
-// const StoreProvider: React.FC = ({ children }) => {
-//   const rootStore = RootStore.create(initialState);
+// Set up a snapshot listener to save the application state to local storage on every change
+onSnapshot(rootStore, (snapshot) => {
+  console.log("Snapshot: ", snapshot);
+  localStorage.setItem("rootState", JSON.stringify(snapshot));
+});
 
-//   return (
-//     <StoreContext.Provider value={rootStore}>
-//       {children}
-//     </StoreContext.Provider>
-//   );
-// };
+// Create a type alias for the instance of 'RootModel'
+export type RootInstance = Instance<typeof RootModel>;
 
-// // Custom hook to access the store
-// const useStore = () => useContext(StoreContext);
+// Create a context to provide the MST store to React components
+const RootStoreContext = createContext<null | RootInstance>(null);
 
-// export { Todo, TodoStore, RootStore, StoreProvider, useStore };
-import { types } from 'mobx-state-tree';
-import Todo from '../models/ToDo';
+// Export the 'Provider' component which will provide the MST store to the application
+export const Provider = RootStoreContext.Provider;
 
-const TodoStore = types
-  .model('TodoStore', {
-    todos: types.array(Todo),
-  })
-  .actions(self => ({
-    addTodo(todo: typeof Todo.Type) {
-      self.todos.push(todo);
-    },
-    removeTodo(todo: typeof Todo.Type) {
-      self.todos.remove(todo);
-    },
-  }));
-
-export default TodoStore;
+// Custom hook to access the MST store from React components
+export function useMst() {
+  const store = useContext(RootStoreContext);
+  if (store === null) {
+    throw new Error("Store cannot be null, please add a context provider");
+  }
+  return store;
+}
