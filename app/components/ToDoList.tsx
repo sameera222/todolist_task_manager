@@ -3,7 +3,9 @@
 import { observer } from "mobx-react-lite";
 import React, { ChangeEvent, useState } from "react";
 import { useMst } from "../models/Root";
+import { BsPencil } from "react-icons/bs";
 import Button from "./Button";
+import { MdDelete } from "react-icons/md";
 
 const ToDoList = observer(() => {
   const { cart } = useMst();
@@ -18,6 +20,9 @@ const ToDoList = observer(() => {
 
   const handleEditItem = (item: any, newName: string) => {
     item.changeName(newName);
+    // setSelectedItem(item);
+    // setName(item.name);
+    //  setDescription(item.description);
   };
 
   const handleFilterItems = () => {
@@ -34,46 +39,51 @@ const ToDoList = observer(() => {
   };
 
   return (
-    <div className="w-full mx-auto mt-16 bg-[#deeaee]">
-        <p className="text-2xl font-bold text-center text-[#7e4a35] p-2">
-          TODO LIST
-        </p>
+    <div className="w-9/12 p-4 mx-auto mt-16 bg-[#ffdde1] rounded">
+      <p className="text-2xl font-bold text-center text-[#7e4a35] p-2">
+        TODO LIST
+      </p>
 
-      <div>
-        <label className="flex-grow">
-          <span className="text-[#7e4a35]">Name</span>
-          <input
-            type="text"
-            name="name"
-            id='name'
-            className="w-96 ml-2 mt-1 bg-gray-900 focus:ring-orange-500 focus:border-orange-500"
-            value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              if (e && e.target) {
-                setName(e.target.value);
-              }
-            }}
-          />
-        </label>
-        <label className="mt-2">
-          <span className="text-[#7e4a35] ">
-            Description
+      <div className="flex flex-row justify-center">
+        <div className="mr-2">
+          <label>
+            <span className="text-[#7e4a35] text-xl font-bold">Title</span>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="What's the task title?"
+              className="w-96 ml-2 pl-4 rounded-full h-20 mt-1 bg-white p-1 text-black focus:ring-orange-500 focus:border-orange-500"
+              value={name}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                if (e && e.target) {
+                  setName(e.target.value);
+                }
+              }}
+            />
+          </label>
+        </div>
+        <div className="ml-2">
+          <label>
+            <span className="text-[#7e4a35] font-bold text-xl">
+              Description
             </span>
-
-          <input
-            type="text"
-            name="description"
-            id='description'
-            className="w-96 ml-2 mt-1 bg-gray-900 focus:ring-orange-500 focus:border-orange-500"
-            value={description}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              if (e && e.target) {
-                setDescription(e.target.value);
-              }
-            }}
-          />
-        </label>
-        <div>
+            <input
+              type="text"
+              name="description"
+              id="description"
+              placeholder="what's the task description?"
+              className="w-96 h-20 ml-2 mt-1 pl-4 rounded-full bg-white focus:ring-orange-500 text-black focus:border-orange-500 p-1"
+              value={description}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                if (e && e.target) {
+                  setDescription(e.target.value);
+                }
+              }}
+            />
+          </label>
+        </div>
+        <div className="p-2">
           <Button
             disabled={isDisabled()}
             label="Add"
@@ -89,7 +99,8 @@ const ToDoList = observer(() => {
           />
         </div>
       </div>
-      <div className="flex mt-4 space-x-4">
+
+      <div className="flex justify-center items-center mt-6 text-xl font-bold space-x-4">
         <input
           type="checkbox"
           checked={status === "complete"}
@@ -111,44 +122,37 @@ const ToDoList = observer(() => {
         />
         <label className="text-[#7e4a35] ">To Do</label>
       </div>
-      <div className="h-64 w-full px-3 py-3 my-12 space-y-3 overflow-y-scroll border border-gray-500">
+      <div className="h-72 w-full px-3 py-3 my-12 space-y-3 overflow-y-scroll">
         {handleFilterItems().map((item: any, index: number) => (
           <div
-            key={`${item.name}-${index}`}
-            className="flex items-center px-4 py-2 mr-2 font-medium leading-tight bg-gray-600 text-gray-50"
+            key={`${item.name}`}
+            className="flex items-center px-4 py-2 mr-2 font-medium leading-tight shadow-lg shadow-gray rounded bg-white"
           >
             <div className="flex-grow">
-              <input
-                type="text"
-                name="name"
-                id='name'
-                value={item.name}
-                className="bg-transparent focus:outline-none  focus:border-orange-500"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleEditItem(item, e.target.value)
-                }
-              />
-            </div>
-
-            <div className="flex-grow">
-              <input
-                type="text"
-                value={item.description}
-                name="description"
-            id='description'
-                className="bg-transparent focus:outline-none  focus:border-orange-500"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleEditItem(item, e.target.value)
-                }
-              />
+              <div className="flex">
+                <div className="text-[#7e4a35] text-4xl">{item.name}</div>
+              </div>
+              <div className="flex">
+                <div className="text-gray-400 text-xl">{item.description}</div>
+              </div>
             </div>
             <span
-              className=" cursor-pointer select-none"
+              className="cursor-pointer select-none"
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleEditItem(item, e.target.value)
+              }
+              role="img"
+              aria-label="edit"
+            >
+              <BsPencil size={30} />
+            </span>
+            <span
+              className="cursor-pointer select-none"
               onClick={item.remove}
               role="img"
               aria-label="delete"
             >
-              ❌
+              <MdDelete size={30} />
             </span>
           </div>
         ))}

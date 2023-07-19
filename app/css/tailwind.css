@@ -3,7 +3,7 @@
 @tailwind base;
 @tailwind components;
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 0.4rem;
 }
 
@@ -13,11 +13,11 @@
 
   ::-webkit-scrollbar-thumb { 
   /* border-radius: 1rem; */
-  background: theme("colors.gray.200");
-} 
+  /* background: theme("colors.gray.200");
+}  */
 
- ::-webkit-scrollbar-thumb:hover {
+ /* ::-webkit-scrollbar-thumb:hover {
   background: theme("colors.orange.500");
-} 
+}   */
 
 @tailwind utilities;
