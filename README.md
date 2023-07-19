@@ -1,16 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Task Management Application
+
+A task management application built with Next.js, TypeScript, Tailwind CSS, MST (Mobx State Tree), and Git.
+Table of Contents
+
+    Features
+    Demo
+    Technologies Used
+    Getting Started
+        Prerequisites
+        Installation
+    Usage
+
+    Features
+
+    Create, view, update, and delete tasks
+    Organize tasks with tags or categories
+    Filter tasks based on status (complete, in progress, todo)
+    User-friendly interface
+    Mobile responsive design
+
+## Demo
+
+Provided a link to the live demo for showcasing the application in action.
+Technologies Used
+
+    Next.js: A React framework for building server-side rendered applications.
+    TypeScript: A superset of JavaScript that provides static typing for enhanced code quality.
+    Tailwind CSS: A utility-first CSS framework for rapid UI development.
+    Mobx State Tree (MST): A state management library for managing complex application state.
+    Git: Version control system for managing and tracking changes in the codebase.
 
 ## Getting Started
+Prerequisites
 
-First, run the development server:
+Make sure you have the following tools installed on your machine:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+    Node.js (https://nodejs.org/)
+    Git (https://git-scm.com/)
+
+Installation
+
+    Clone the repository:
+
+bash
+
+git clone 
+
+    Navigate to the project directory:
+
+bash
+
+cd task-management-app
+
+    Install the dependencies:
+
+bash
+
+npm install
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
