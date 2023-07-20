@@ -16,6 +16,7 @@ const Button = ({ label, disabled = false, ...otherProps }: Props) => {
         rounded
         hover:text-orange-500
         h-11
+        
         cursor-pointer
          first-letter:focus:outline-none focus:shadow-outline",
         disabled && "opacity-50 

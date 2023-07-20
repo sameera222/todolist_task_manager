@@ -40,13 +40,13 @@ const ToDoList = observer(() => {
   };
 
   return (
-    <div className="w-2/4 p-4 mx-auto mt-16  rounded-md">
-      <p className="text-4xl font-bold text-center text-black p-2">TODO LIST</p>
+    <div className="w-3/4 p-4 mx-auto mt-16 rounded-md container">
+      <p className="text-4xl font-bold text-center flex flex-row items-center justify-center text-black p-2 max-w-5xl">TODO LIST</p>
 
-      <div className="flex flex-row justify-center p-4 mt-4">
-        <div className="mr-2">
+      <div className="flex md:flex-col sm:flex-col xs:flex-col ss:flex-col lg:flex-row p-4 mt-4 items-center justify-center input-container">
+        <div className="ml-2 flex">
           <label>
-            <span className="text-[#7e4a35] text-xl font-bold flex justify-start ml-4">
+            <span className="text-[#7e4a35] text-xl font-bold flex justify-start">
               Title
             </span>
             <input
@@ -55,7 +55,7 @@ const ToDoList = observer(() => {
               id="name"
               autoComplete="off"
               placeholder="What's the task title?"
-              className="text-xl text-orange-800 placeholder-orange-400 py-2 px-5 bg-orange-100 rounded-l-full outline-orange-300"
+              className="text-xl text-orange-800 placeholder-orange-400  w-full  py-2 px-5 bg-orange-100 rounded-l-full outline-orange-300"
               value={name}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e && e.target) {
@@ -65,9 +65,9 @@ const ToDoList = observer(() => {
             />
           </label>
         </div>
-        <div className="ml-2">
+        <div className="ml-2 flex">
           <label>
-            <span className="text-[#7e4a35] font-bold text-xl">
+            <span className="text-[#7e4a35] font-bold text-xl flex jusify-start">
               Description
             </span>
             <input
@@ -76,7 +76,7 @@ const ToDoList = observer(() => {
               id="description"
               autoComplete="off"
               placeholder="what's the task description?"
-              className="text-xl text-orange-800 placeholder-orange-400 py-2 px-5 bg-orange-100 rounded-l-full outline-orange-300"
+              className="text-xl text-orange-800 placeholder-orange-400 py-2 px-5 w-full bg-orange-100 rounded-l-full outline-orange-300"
               value={description}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e && e.target) {
@@ -105,7 +105,7 @@ const ToDoList = observer(() => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-6 text-xl font-bold space-x-4">
+      <div className="flex justify-center md:flex-row sm:flex-row xs:flex-col items-center mt-6 text-xl font-bold space-x-4">
         <input
           type="checkbox"
           checked={status === "complete"}
