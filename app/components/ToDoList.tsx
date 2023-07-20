@@ -55,7 +55,7 @@ const ToDoList = observer(() => {
               id="name"
               autoComplete="off"
               placeholder="What's the task title?"
-              className="text-xl text-orange-800 placeholder-orange-400  w-full  py-2 px-5 bg-orange-100 rounded-l-full outline-orange-300"
+              className="text-xl text-orange-800 placeholder-orange-400 w-full  py-2 px-5 bg-orange-100 rounded-l-full outline-orange-300"
               value={name}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e && e.target) {
@@ -140,14 +140,14 @@ const ToDoList = observer(() => {
                 {editMode && selectedItem === item ? (
                   <input
                     type="text"
-                    className="text-orange-500 text-3xl bg-orange-100 w-96"
+                    className="text-orange-500 md:text-3xl xs:text-sm bg-orange-100 w-96"
                     value={editedName}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setEditedName(e.target.value)
                     }
                   />
                 ) : (
-                  <div className="text-orange-500 text-4xl">{item.name}</div>
+                  <div className="text-orange-500 md:text-4xl xs:text-sm">{item.name}</div>
                 )}
               </div>
               <div className="flex">
@@ -155,19 +155,20 @@ const ToDoList = observer(() => {
                 {editMode && selectedItem === item ? (
                   <input
                     type="text"
-                    className="text-gray-400 text-xl  bg-orange-100 w-96"
+                    className="text-gray-400 md:text-xl xs:text-sm bg-orange-100 w-96"
                     value={editedDescription}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setEditedDescription(e.target.value)
                     }
                   />
                 ) : (
-                  <div className="text-gray-400 text-xl">
+                  <div className="text-gray-400 md:text-xl xs:text-sm">
                     {item.description}
                   </div>
                 )}
               </div>
             </div>
+            <div className="flex md:flex-row xs:flex-col items-end justify-end">
             <span
               className="cursor-pointer select-none"
               // Step 2: Enable edit mode when the edit icon is clicked
@@ -180,7 +181,7 @@ const ToDoList = observer(() => {
               role="img"
               aria-label="edit"
             >
-              <BsPencil size={25} className="text-orange-500" />
+              <BsPencil size={20} className="text-orange-500" />
             </span>
             <span
               className="cursor-pointer select-none ml-2"
@@ -188,8 +189,9 @@ const ToDoList = observer(() => {
               role="img"
               aria-label="delete"
             >
-              <MdDelete size={25} className="text-orange-500" />
+              <MdDelete size={20} className="text-orange-500" />
             </span>
+            </div>
           </div>
         ))}
       </div>
